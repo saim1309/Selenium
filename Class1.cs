@@ -210,6 +210,110 @@ namespace QAAssignment3
             driver.Close();
         }
 
+        /*Test Case 5: Check the happy path i.e., If all the netries to the form are correct*/
+        [Test]
+        public void CheckSearchFunctionality()
+        {
+            /**********************ARRANGE***********************/
+
+            /*Initializing the Iwebdriver*/
+            driver = new FirefoxDriver();
+            /*Implicit pageload timeout*/
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+            Boolean dataEntered = false;
+
+            /**************************ACT***************/
+            /* Navigating to the homepage url*/
+            driver.Navigate().GoToUrl(homePageLoc);
+            Thread.Sleep(2000);
+
+            /* Finding the xpath of Add button to click */
+            driver.FindElement(By.XPath("//*[@id='search']/a[1]")).Click();
+            /* Enter all the required details*/
+            driver.FindElement(By.Id("fname")).SendKeys("Rachel");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("lname")).SendKeys("Green");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("address")).SendKeys("653 Albert Street");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("city")).SendKeys("Waterloo");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("phone")).SendKeys("519-781-9206");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("email")).SendKeys("rachelgreen@gmail.com");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("model")).SendKeys("2012 BMW 328i");
+            Thread.Sleep(1000);
+            /* Click on Submit button after filling all the field*/
+            driver.FindElement(By.XPath("//*[@id='myform']/input[8]")).Click();
+            /*Click on home button to back*/
+            driver.FindElement(By.XPath("/html/body/a")).Click();
+            /*Click on search button*/
+            driver.FindElement(By.Id("searchButton")).Click();
+            /*Get the data that displays after clicking on search button*/
+            string data = driver.FindElement(By.Id("displayEntries")).Text;
+
+            /* Check if data displayed contains the details of the previous data added
+             that means search functionality works fine*/
+            if (data.Contains("Rachel Green"))
+            {
+                dataEntered = true;
+            }
+            /***********************ASSERT*********************/
+            Assert.AreEqual(true, dataEntered);
+            Thread.Sleep(3000);
+            driver.Close();
+        }
+
+
+        /*Test Case 6: To check the system behaviour for invalid email entry*/
+        [Test]
+        public void CheckWrongEmailEntry()
+        {
+            /**********************ARRANGE***********************/
+
+            /*Initializing the Iwebdriver*/
+            driver = new FirefoxDriver();
+            /*Implicit pageload timeout*/
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(5);
+            Boolean phoneErrorPresent = false;
+
+            /**************************ACT***************/
+            /* Navigating to the homepage url*/
+            driver.Navigate().GoToUrl(homePageLoc);
+            Thread.Sleep(2000);
+            /* Finding the xpath of Add button to click */
+            driver.FindElement(By.XPath("//*[@id='search']/a[1]")).Click();
+            /* Enter all the required details*/
+            driver.FindElement(By.Id("fname")).SendKeys("Rachel");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("lname")).SendKeys("Green");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("address")).SendKeys("653 Albert Street");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("city")).SendKeys("Waterloo");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("phone")).SendKeys("519-645-5236");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("email")).SendKeys("rachelgreen.com");
+            Thread.Sleep(1000);
+            driver.FindElement(By.Id("model")).SendKeys("2012 BMW 328i");
+            Thread.Sleep(1000);
+            /* Click on Submit button after filling all the field*/
+            driver.FindElement(By.XPath("//*[@id='myform']/input[8]")).Click();
+
+
+            string phoneError = driver.FindElement(By.Id("emailError")).Text;
+            if (!phoneError.Equals(""))
+            {
+                phoneErrorPresent = true;
+            }
+
+            /***********************ASSERT*********************/
+            Assert.AreEqual(true, phoneErrorPresent);
+            Thread.Sleep(3000);
+            driver.Close();
+        }
 
 
 
